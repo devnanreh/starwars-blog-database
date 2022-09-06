@@ -8,26 +8,33 @@ from eralchemy import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
+class User(Base):
+    __tablename__='user'
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    user_name = Column(String(250), unique = True, nullable=False)
+    first_name = Column(String(250), unique = False)
+    last_name = Column(String(250), unique = False)
+    email = Column(String(250), unique = True, nullable = False)
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+class Planet(Base):
+    __tablename__ = 'planet'
+    id = Column(Integer, primary_key= True)
+    name = Column(String(250), unique = True, nullable = False)
 
-    def to_dict(self):
-        return {}
+class Character(Base):
+    __tablename__ = 'character'
+    id = Column(Integer, primary_key= True)
+    name = Column(String(250), unique = True, nullable = False)
+
+class UserPlanetFavorite(Base):
+    __tablename__ = 'user_planet_favorite'
+    user_id = Column(Integer, ForeignKey("user.id"), primary_key = True)
+    planet_id = Column(Integer, ForeignKey("planet.id"), primary_key = True)
+
+class UserCharacterFavorite(Base):
+    __tablename__ = 'user_character_favorite'
+    user_id = Column(Integer, ForeignKey("user.id"), primary_key = True)
+    character_id = Column(Integer, ForeignKey("character.id"), primary_key = True)
 
 ## Draw from SQLAlchemy base
 render_er(Base, 'diagram.png')
